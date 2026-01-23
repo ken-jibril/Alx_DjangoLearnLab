@@ -5,6 +5,6 @@ class BooksAdmin(admin.ModelAdmin):
 
     list_display = ('title', 'author', 'published_date')
     search_fields = ('title', 'author', 'isbn_number')    
-    list_filter = ('published_date', 'language')
+    list_filter = ('published_date')
 
 admin.site.register(Books, BooksAdmin)
