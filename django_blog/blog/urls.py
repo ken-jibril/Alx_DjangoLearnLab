@@ -12,6 +12,7 @@ from .views import (
     CommentCreateView,
     CommentUpdateView,
     CommentDeleteView,
+    PostByTagListView,
 )
 from .views import PostSearchView, PostsByTagListView
 from taggit.models import Tag
@@ -50,4 +51,5 @@ urlpatterns = [
 
     path('search/', PostSearchView.as_view(), name='post-search'),
     path('tags/<slug:tag_slug>/', PostsByTagListView.as_view(), name='posts-by-tag'),
+    path('tags/<str:tag_name>/', PostByTagListView.as_view(), name='posts-by-tag'),
 ]
