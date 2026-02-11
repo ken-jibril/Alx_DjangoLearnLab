@@ -4,14 +4,15 @@ from django.contrib.auth.decorators import login_required
 from .forms import RegisterForm
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
-from .models import Post, Comment
+from .models import Post, Comment, Tag
 from .forms import PostForm, CommentForm
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
-
+from django.views.generic import ListView
+from .models import Post, Tag
 
 def register_view(request):
     if request.method == 'POST':
@@ -140,3 +141,13 @@ class PostSearchView(ListView):
                 Q(tags__name__icontains=query)
             ).distinct()
         return Post.objects.none()
+
+
+class PostByTagListView(ListView):
+    model = Post
+    template_name = 'blog/posts_by_tag.html'
+    context_object_name = 'posts'
+
+    def get_queryset(self):
+        tag_name = self.kwargs.get('tag_name')
+        return Post.objects.filter(tags__name__iexact=tag_name)
