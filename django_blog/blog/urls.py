@@ -13,6 +13,21 @@ from .views import (
     CommentUpdateView,
     CommentDeleteView,
 )
+from .views import PostSearchView, PostsByTagListView
+from taggit.models import Tag
+
+class PostsByTagListView(ListView):
+    model = Post
+    template_name = 'blog/posts_by_tag.html'
+    context_object_name = 'posts'
+
+    def get_queryset(self):
+        return Post.objects.filter(tags__slug=self.kwargs['tag_slug'])
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['tag_name'] = self.kwargs['tag_slug']
+        return context
 
 urlpatterns = [
     # Blog posts CRUD
@@ -32,4 +47,7 @@ urlpatterns = [
     path('login/', login_view, name='login'),
     path('logout/', logout_view, name='logout'),
     path('profile/', profile_view, name='profile'),
+
+    path('search/', PostSearchView.as_view(), name='post-search'),
+    path('tags/<slug:tag_slug>/', PostsByTagListView.as_view(), name='posts-by-tag'),
 ]
